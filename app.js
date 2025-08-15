@@ -1,70 +1,69 @@
-const API_URL = "https://lingva.ml/api/v1";
+const sourceLang = document.getElementById('sourceLang');
+const targetLang = document.getElementById('targetLang');
+const inputText = document.getElementById('inputText');
+const output = document.getElementById('output');
+const spinner = document.getElementById('spinner');
+const toggleModeBtn = document.getElementById('toggleModeBtn');
+const swapBtn = document.getElementById('swapBtn');
+let darkMode = false;
+
 const languages = {
-    "en": "English",
-    "es": "Spanish",
-    "fr": "French",
-    "de": "German",
-    "hi": "Hindi",
-    "ja": "Japanese",
-    "ko": "Korean",
-    "ru": "Russian",
-    "zh": "Chinese",
-    "ar": "Arabic",
-    "pt": "Portuguese",
-    "tr": "Turkish"
+    'en': 'English',
+    'es': 'Spanish',
+    'fr': 'French',
+    'de': 'German',
+    'it': 'Italian',
+    'ru': 'Russian',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'zh': 'Chinese'
 };
 
-const inputText = document.getElementById("inputText");
-const outputText = document.getElementById("outputText");
-const sourceLang = document.getElementById("sourceLang");
-const targetLang = document.getElementById("targetLang");
-const translateBtn = document.getElementById("translateBtn");
-const darkModeToggle = document.getElementById("darkModeToggle");
-const swapBtn = document.getElementById("swapBtn");
+for (let code in languages) {
+    const opt1 = document.createElement('option');
+    opt1.value = code;
+    opt1.textContent = languages[code];
+    sourceLang.appendChild(opt1);
 
-function translateLang() {
-    for (let code in languages) {
-        let option1 = document.createElement("option");
-        let option2 = document.createElement("option");
-        option1.value = option2.value = code;
-        option1.textContent = option2.textContent = languages[code];
-        sourceLang.appendChild(option1);
-        targetLang.appendChild(option2);
-    }
-    sourceLang.value = "en";
-    targetLang.value = "es";
+    const opt2 = document.createElement('option');
+    opt2.value = code;
+    opt2.textContent = languages[code];
+    targetLang.appendChild(opt2);
 }
+sourceLang.value = 'en';
+targetLang.value = 'es';
 
-translateBtn.addEventListener("click", async () => {
-    const from = sourceLang.value;
-    const to = targetLang.value;
-    const text = inputText.value.trim();
-    if (!text) return outputText.textContent = "Please enter some text.";
-    try {
-        const response = await fetch(`${API_URL}/${from}/${to}/${encodeURIComponent(text)}`);
-        const data = await response.json();
-        outputText.textContent = data.translation;
-    } catch (err) {
-        outputText.textContent = "Translation failed. Try again later.";
-        console.error(err);
-    }
-});
-
-swapBtn.addEventListener("click", () => {
+swapBtn.addEventListener('click', () => {
     const temp = sourceLang.value;
     sourceLang.value = targetLang.value;
     targetLang.value = temp;
 });
 
-if (localStorage.getItem('darkMode') === 'enabled') {
-    document.body.classList.add('dark-mode');
-    darkModeToggle.textContent = '☀️';
-}
-
-darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+toggleModeBtn.addEventListener('click', () => {
+    darkMode = !darkMode;
+    document.body.classList.toggle('dark-mode', darkMode);
+    toggleModeBtn.textContent = darkMode ? 'Light Mode' : 'Dark Mode';
 });
-translateLang();
+
+document.getElementById('translateBtn').addEventListener('click', async () => {
+    const text = inputText.value.trim();
+    if (!text) {
+        output.textContent = 'Type something';
+        output.classList.add('visible');
+        return;
+    }
+    spinner.style.display = 'block';
+    output.classList.remove('visible');
+    output.textContent = '';
+    try {
+        const res = await fetch(`https://lingva.ml/api/v1/${sourceLang.value}/${targetLang.value}/${encodeURIComponent(text)}`);
+        const data = await res.json();
+        spinner.style.display = 'none';
+        output.textContent = data.translation || 'Translation failed.';
+        output.classList.add('visible');
+    } catch (err) {
+        spinner.style.display = 'none';
+        output.textContent = 'Error fetching translation.';
+        output.classList.add('visible');
+    }
+});
