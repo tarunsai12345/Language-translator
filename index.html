@@ -2,28 +2,22 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>language Translator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-language Translator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <div class="top-bar">
-            <h1>Language Translator</h1>
-            <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
-        </div>
-
-        <textarea id="inputText" placeholder="Enter text..."></textarea>
-        <div style="display: flex; justify-content: space-between;">
-            <select id="sourceLang"></select>
-            <button id="swapBtn"><img class="img" src="https://res.cloudinary.com/dnzj39t4r/image/upload/v1754564189/b45a78bf-6249-4f1d-9225-1c187603c03c_removalai_preview_zemnxc.png" alt="" /></button>
-            <select id="targetLang"></select>
-        </div>
-        <button id="translateBtn">Translate</button>
-        <div id="outputText"></div>
-    </div>
+    <h1>Multi-language Translator</h1>
+    <textarea id="inputText" placeholder="Type text here..."></textarea><br>
+    <select id="sourceLang"></select>
+    <button id="swapBtn">Swap</button>
+    <select id="targetLang"></select><br>
+    <button id="translateBtn">Translate</button>
+    <button id="toggleModeBtn">Dark Mode</button>
+    <div id="spinner" class="spinner" style="display:none;"></div>
+    <div id="output" class="output"></div>
 </body>
 
 </html>
